@@ -9,7 +9,9 @@ public class Constant {
     static public String VOTE_PROFILE_PAGE_SELECTED ="profile_vote";
     static public String ASK_PROFILE_PAGE_SELECTED ="profile_ask";
 
-    static public String CURRENT_PAGE_SELECTED ="";
+    static public String VOTE_CURRENT_PAGE_SELECTED ="";
+    static public String ASK_CURRENT_PAGE_SELECTED ="";
+
     static public String ASK_QUESTION_ID ="";
     static public String ASK_USERIMAGE ="";
     static public String ASK_USERNAME ="";

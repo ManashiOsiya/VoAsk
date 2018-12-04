@@ -3,6 +3,7 @@ package com.voaskq.adapter;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
@@ -14,18 +15,27 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 import com.voaskq.R;
 import com.voaskq.activity.AnswerAskActivity;
 import com.voaskq.helper.Constant;
+import com.voaskq.helper.MyProgressbar;
 import com.voaskq.modal.MainAsk;
+import com.voaskq.webservices.Api;
+import com.voaskq.webservices.ApiFactory;
 
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-
 import de.hdodenhof.circleimageview.CircleImageView;
-import uk.co.senab.photoview.PhotoViewAttacher;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHolder> {
 
@@ -33,12 +43,15 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
     MyViewHolder myholder;
     ArrayList<MainAsk> mainList = null;
     String tag = "haomeadapter";
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+    String Userid;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         CircleImageView user_image;
         TextView Username,  questitle,ans_no;
-        ImageView main_img;
+        ImageView main_img,deleteask;
         LinearLayout mainLinearimg;
 
         public MyViewHolder(View view) {
@@ -50,8 +63,14 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
             questitle = view.findViewById(R.id.questitle);
             main_img = view.findViewById(R.id.main_img);
             ans_no  = view.findViewById(R.id.ans_no);
+            deleteask  = view.findViewById(R.id.deleteask);
             this.setIsRecyclable(false);
+
+           if (Constant.ASK_CURRENT_PAGE_SELECTED.equalsIgnoreCase(Constant.ASK_PROFILE_PAGE_SELECTED)) {
+               deleteask.setVisibility(View.VISIBLE);
+           }
         }
+
     }
 
     public MainAskAdapter(ArrayList<MainAsk> mainList, Context context) {
@@ -64,6 +83,12 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.ask_adapteritem, parent, false);
         myholder = new MyViewHolder(view);
+
+        pref    = context.getSharedPreferences("MyPref", context.MODE_PRIVATE);
+        editor  = pref.edit();
+        Userid  = pref.getString("Userid", null);
+
+
         return myholder;
     }
 
@@ -96,12 +121,9 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
 
         Log.e(tag," mainobj.getAsk_picture()~~"+ mainobj.getAsk_picture());
 
-
         if(mainobj.getAsk_picture().equalsIgnoreCase(null) || mainobj.getAsk_picture().equalsIgnoreCase("null")){
             holder.mainLinearimg.setVisibility(View.GONE);
         }
-
-
 
         if (userimag.equals("")) {
 
@@ -135,11 +157,67 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
         });
 
 
+        holder.deleteask.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                deleteASk(mainobj.getQuestion_id(),position);
+
+            }
+        });
+
+    }
+
+    private void deleteASk(String question_id, final int position) {
+
+        final Dialog progress_spinner = MyProgressbar.LoadingSpinner(context);
+        progress_spinner.show();
+        Api api = ApiFactory.getClient().create(Api.class);
+        Call<ResponseBody> call = api.deleteAsk(Userid,question_id);
+        Log.e(tag, "new url : " + call.request().url());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                String output = null;
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line = null;
+
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line + "\n");
+                    }
+                    output = stringBuilder.toString();
+                    Log.e(tag, "onResponse: " + output);
+                    JSONObject jsonObject = new JSONObject(output);
+                    progress_spinner.dismiss();
+                    if (jsonObject.getString("status").equalsIgnoreCase("SUCCESS")) {
+
+                        mainList.remove(position);
+//                        removeViewAt(position);
+                        notifyItemRemoved(position);
+                        notifyItemRangeChanged(position, mainList.size());
+
+                    } else if (jsonObject.getString("status").equalsIgnoreCase("FAILED")) {
+                        String msg = jsonObject.getString("message");
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    progress_spinner.dismiss();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progress_spinner.dismiss();
+            }
+        });
 
 
 
     }
-
 
 
 

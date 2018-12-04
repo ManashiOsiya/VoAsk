@@ -177,7 +177,7 @@ public class ProfileFragment extends Fragment {
                  VoteLinear  .setVisibility(View.VISIBLE);
                 AskLinear  .setVisibility(View.GONE);
 
-                Constant.CURRENT_PAGE_SELECTED = Constant.VOTE_PROFILE_PAGE_SELECTED;
+                Constant.VOTE_CURRENT_PAGE_SELECTED = Constant.VOTE_PROFILE_PAGE_SELECTED;
 
                 getVoteData();
 
@@ -202,7 +202,7 @@ public class ProfileFragment extends Fragment {
                 VoteLinear  .setVisibility(View.GONE);
                 AskLinear  .setVisibility(View.VISIBLE);
 
-                Constant.CURRENT_PAGE_SELECTED = Constant.ASK_PROFILE_PAGE_SELECTED;
+                Constant.ASK_CURRENT_PAGE_SELECTED = Constant.ASK_PROFILE_PAGE_SELECTED;
 
 
                 getAskList();

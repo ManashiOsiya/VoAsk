@@ -204,9 +204,29 @@ public interface Api {
 
 //    https://apps.konnectapp.co.nz/voask/index.php/api/post/deletepost
 
-
     @GET("post/deletepost")
     Call<ResponseBody> deleteVote(@Header("token") String token,
                                    @Query("post") String post);
+
+
+
+    /* 21 =====================================  @ delete ques  ====================================================*/
+
+//    https://apps.konnectapp.co.nz/voask/index.php/api/question/deletequestion?question=
+
+    @GET("question/deletequestion")
+    Call<ResponseBody> deleteAsk(@Header("token") String token,
+                                  @Query("question") String question);
+
+
+    /* 22 =====================================  @ show vote list  ====================================================*/
+
+//    https://apps.konnectapp.co.nz/voask/index.php/api/post/votedList?post_image_id=
+
+
+    @GET("post/votedList")
+    Call<ResponseBody> showVoteList(@Header("token") String token,
+                                    @Query("post_image_id") String post_image_id);
+
 
 }
