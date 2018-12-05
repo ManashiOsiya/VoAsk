@@ -25,6 +25,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.voaskq.R;
 import com.voaskq.adapter.AddVoteNAskAdapter;
+import com.voaskq.adapter.SpinnerCustomAdapter;
 import com.voaskq.modal.AddVoteNAsk;
 import com.voaskq.webservices.Api;
 import com.voaskq.webservices.ApiFactory;
@@ -150,13 +151,11 @@ public class AddActivity extends AppCompatActivity implements AdapterView.OnItem
 
     private void setAdapter() {
 
-        ArrayAdapter select_adapter = new ArrayAdapter(context, android.R.layout.simple_spinner_item, spinner_item);
-        select_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_select.setAdapter(select_adapter);
+        SpinnerCustomAdapter spinner_select_customAdapter=new SpinnerCustomAdapter(getApplicationContext(),spinner_item);
+        spinner_select.setAdapter(spinner_select_customAdapter);
 
-        ArrayAdapter select_adapter_category = new ArrayAdapter(context, android.R.layout.simple_spinner_item, spinner_category_item);
-        select_adapter_category.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_category.setAdapter(select_adapter_category);
+        SpinnerCustomAdapter spinner_category_customAdapter=new SpinnerCustomAdapter(getApplicationContext(),spinner_category_item);
+        spinner_category.setAdapter(spinner_category_customAdapter);
 
     }
 
