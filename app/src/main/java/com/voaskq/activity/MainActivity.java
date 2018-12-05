@@ -105,21 +105,21 @@ public class MainActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
               //      System.gc();
-                    Constant.CURRENT_PAGE_SELECTED =  Constant.HOME_PAGE_SELECTED;
+//                    Constant.CURRENT_PAGE_SELECTED =  Constant.HOME_PAGE_SELECTED;
                     Fragment fragment = new HomeFragment();
                     changeFragment(fragment);
                     return true;
 
                 case R.id.navigation_ask:
                //     System.gc();
-                    Constant.CURRENT_PAGE_SELECTED =  Constant.ASK_PAGE_SELECTED;
+//                    Constant.CURRENT_PAGE_SELECTED =  Constant.ASK_PAGE_SELECTED;
                     Fragment fragment4 = new AskFragment();
                     changeFragment(fragment4);
                     return true;
 
                 case R.id.navigation_vote:
                //     System.gc();
-                    Constant.CURRENT_PAGE_SELECTED =  Constant.VOTE_PAGE_SELECTED;
+//                    Constant.CURRENT_PAGE_SELECTED =  Constant.VOTE_PAGE_SELECTED;
                     Fragment fragment2 = new VoteFragment();
                     changeFragment(fragment2);
                     return true;

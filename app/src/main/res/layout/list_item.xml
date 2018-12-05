@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/linear"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/user_image"
+        android:layout_width ="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/usericon"
+        app:civ_border_width="1dp"
+        app:civ_border_color="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center|left"
+        android:textSize="18dp"
+        android:layout_marginLeft="5dp"
+        android:textColor="@color/colorPrimaryDark"
+        android:text="Campain Name"/>
+
+    </LinearLayout>
+
+ <View
+     android:layout_width="match_parent"
+     android:layout_height="1dp"
+     android:layout_marginTop="3dp"
+     android:background="@color/darkgrey"/>
+
+
+
+</LinearLayout>

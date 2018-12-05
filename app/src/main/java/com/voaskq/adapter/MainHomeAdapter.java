@@ -91,7 +91,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
             home_adapter_recyclerView.setHasFixedSize(true);
             home_adapter_recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
 
-            if (Constant.CURRENT_PAGE_SELECTED.equalsIgnoreCase(Constant.VOTE_PROFILE_PAGE_SELECTED)) {
+            if (Constant.VOTE_CURRENT_PAGE_SELECTED.equalsIgnoreCase(Constant.VOTE_PROFILE_PAGE_SELECTED)) {
                 report.setVisibility(View.GONE);
                 deletevote.setVisibility(View.VISIBLE);
             }
