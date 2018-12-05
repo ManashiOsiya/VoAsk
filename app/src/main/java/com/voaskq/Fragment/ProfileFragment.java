@@ -532,6 +532,7 @@ public class ProfileFragment extends Fragment {
 
         final Dialog progress_spinner = MyProgressbar.LoadingSpinner(mContext);
         progress_spinner.show();
+
         Api api = ApiFactory.getClient().create(Api.class);
         Call<ResponseBody> call = api.deleteVote(Userid,post_id);
         Log.e(tag, "new url : " + call.request().url());

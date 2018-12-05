@@ -44,6 +44,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
     SharedPreferences.Editor editor;
     String Userid;
     String tag="SearchAdapter";
+    View mView;
 
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -53,6 +54,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 
         public MyViewHolder(View view) {
             super(view);
+
+            mView =view;
+
             user_image=  view.findViewById( R.id.user_image);
             username      = (TextView) view.findViewById( R.id.username);
             followingtext     = (TextView) view.findViewById( R.id.followingtext);
@@ -185,8 +189,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
 
                         String result = jsonObject.getString("result");
 
-                        search.setFollow_id(result);
-
                         holder.follow_btn.setVisibility(View.GONE);
                         holder.unfollow_linear.setVisibility(View.VISIBLE);
 
@@ -236,8 +238,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.MyViewHold
                     if (jsonObject.getString("status").equalsIgnoreCase("SUCCESS")) {
 
                         String result = jsonObject.getString("result");
-
-                        search.setFollow_id("result");
 
                         holder.follow_btn.setVisibility(View.VISIBLE);
                         holder.unfollow_linear.setVisibility(View.GONE);

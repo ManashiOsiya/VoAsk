@@ -64,12 +64,13 @@ public class SearchActivity extends AppCompatActivity {
 
     private void initviews() {
 
-        back=(ImageView)findViewById(R.id.back);
+        back= findViewById(R.id.back);
         searchfield = findViewById(R.id.searchView);
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView =  findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
+
     }
 
     private void clickEvents() {
@@ -116,9 +117,7 @@ public class SearchActivity extends AppCompatActivity {
 //
 //            @Override
 //            public void afterTextChanged(Editable editable) {
-//
-//
-//
+
 //            }
 //        });
 

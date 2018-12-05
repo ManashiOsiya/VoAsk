@@ -105,6 +105,7 @@ public class NewVideoFragment extends Fragment {
             public void onFailure(final Call call, final IOException e) {
                 Log.e("one", "~~~~~~~~onFailure~~~~~");
             }
+
             @Override
             public void onResponse(final Call call, final Response response) throws IOException {
                 String body = response.body().string();
@@ -114,7 +115,15 @@ public class NewVideoFragment extends Fragment {
 
                     for (int i = 0; i < results.length(); i++) {
                         JSONObject latestBroadcast = results.optJSONObject(i);
+
+                        Log.e("one","latestBroadcast~~~~"+latestBroadcast);
+
+//                     {"author":"","created":1543999309,"height":1280,"id":"b5d6ef42-55ab-41c1-a193-d2a4d4be68fe","ingestChannel":"594eb79b-004e-d1d3-cfde-c19d6eabc7d4","length":8,
+//                              "preview":"https:\/\/preview.bambuser.io\/live\/eyJyZXNvdXJjZVVyaSI6Imh0dHBzOlwvXC9jZG4uYmFtYnVzZXIubmV0XC9icm9hZGNhc3RzXC9iNWQ2ZWY0Mi01NWFiLTQxYzEtYTE5My1kMmE0ZDRiZTY4ZmUifQ==\/preview.jpg",
+//                              "resourceUri":"https:\/\/cdn.bambuser.net\/broadcasts\/b5d6ef42-55ab-41c1-a193-d2a4d4be68fe?da_signature_method=HMAC-SHA256&da_id=9e1b1e83-657d-7c83-b8e7-0b782ac9543a&da_timestamp=1543999324&da_static=1&da_ttl=0&da_signature=c426a9c68179ad84643cab6bbb68ff400b574fbd4883b52f6f6ebcc4d6a2ea28","tags":[],"title":"VoAsk","type":"archived","width":720}
+
                         String preview = "", type = "";
+
                         try {
                             preview = latestBroadcast.optString("preview");
                         } catch (Exception e) {
@@ -124,30 +133,31 @@ public class NewVideoFragment extends Fragment {
                         } catch (Exception e) {
                         }
 
-                        String resourceuri = latestBroadcast.optString("resourceUri");
-                        String created = latestBroadcast.getString("created");
+                        String resourceuri  = latestBroadcast.optString("resourceUri");
+                        String created      = latestBroadcast.getString("created");
+                        String author       = latestBroadcast.getString("author");
+                        String id           = latestBroadcast.getString("id");
 
-                     boolean isValid =   calculateTime(created);
+                 //     String customdata   = latestBroadcast.getString("customData");
+                 //     String height          = latestBroadcast.getString("height");
+                 //     String ingestChannel   = latestBroadcast.getString("ingestChannel");
+                 //     String length   = latestBroadcast.getString("length");
 
-                        //     String auther   = latestBroadcast.getString("author");
-                        //     String customdata   = latestBroadcast.getString("customData");
-                        //     String height          = latestBroadcast.getString("height");
-                        //     String id   = latestBroadcast.getString("id");
-                        //     String ingestChannel   = latestBroadcast.getString("ingestChannel");
-                        //     String length   = latestBroadcast.getString("length");
+                        boolean isValid = calculateTime(created);
 
-                        if(isValid) {
-                            BroadcastList obj = new BroadcastList(preview, resourceuri, type, created);
+                        if (isValid) {
+                            BroadcastList obj = new BroadcastList(preview, resourceuri, type, created,author,id);
                             mainlist.add(obj);
                         }
                     }
                     refreshMyRecyclerView();
                 } catch (Exception ignored) {
-                    Log.e("one",  "~~~ignored~~~~~Exception~~~~~" + ignored);
+                    Log.e("one", "~~~ignored~~~~~Exception~~~~~" + ignored);
                 }
             }
         });
     }
+
 
     private boolean calculateTime(String created) {
         try {
@@ -172,10 +182,9 @@ public class NewVideoFragment extends Fragment {
 
         } catch (ParseException e) {
             e.printStackTrace();
-            return  false;
+            return false;
         }
     }
-
     public String getCurrentDate() {
 
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss z");
@@ -183,7 +192,6 @@ public class NewVideoFragment extends Fragment {
         Log.e("one", "getCurrentDate    ---" + Date);
         return Date;
     }
-
     public long printDifference(Date startDate, Date endDate) {
         //milliseconds
         long different = endDate.getTime() - startDate.getTime();
@@ -221,7 +229,6 @@ public class NewVideoFragment extends Fragment {
         return elapsedDays;
 
     }
-
 
     public void refreshMyRecyclerView() {
         new Thread(new Runnable() {

@@ -1,5 +1,6 @@
 package com.voaskq.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,6 +27,7 @@ import com.theartofdev.edmodo.cropper.CropImageView;
 import com.voaskq.R;
 import com.voaskq.adapter.AddVoteNAskAdapter;
 import com.voaskq.adapter.SpinnerCustomAdapter;
+import com.voaskq.helper.MyProgressbar;
 import com.voaskq.modal.AddVoteNAsk;
 import com.voaskq.webservices.Api;
 import com.voaskq.webservices.ApiFactory;
@@ -194,6 +196,9 @@ public class AddActivity extends AppCompatActivity implements AdapterView.OnItem
 
     void uploadFile(ArrayList<File> imagefile) {
 
+        final Dialog progress_spinner = MyProgressbar.LoadingSpinner(context);
+        progress_spinner.show();
+
         RequestBody newDescription = RequestBody.create(MediaType.parse("multipart/form-data"), Description);
         RequestBody newPostType = RequestBody.create(MediaType.parse("multipart/form-data"), SelectedSpinnerItem);
         RequestBody newSelectedCategoryItem = RequestBody.create(MediaType.parse("multipart/form-data"), SelectedCategoryItem);
@@ -248,6 +253,9 @@ public class AddActivity extends AppCompatActivity implements AdapterView.OnItem
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 String output = null;
+
+                progress_spinner.dismiss();
+
                 try {
                     Log.e("response11", "res~~~~~~" + response.toString());
                     BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream()));
@@ -265,12 +273,13 @@ public class AddActivity extends AppCompatActivity implements AdapterView.OnItem
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
+                    progress_spinner.dismiss();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                progress_spinner.dismiss();
             }
         });
     }

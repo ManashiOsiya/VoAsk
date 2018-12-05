@@ -3,11 +3,11 @@ package com.voaskq.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -18,6 +18,8 @@ import com.voaskq.modal.BroadcastList;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class NewListAdapter extends RecyclerView.Adapter<NewListAdapter.MyViewHolder> {
 
     public Context context;
@@ -25,12 +27,15 @@ public class NewListAdapter extends RecyclerView.Adapter<NewListAdapter.MyViewHo
     ArrayList<BroadcastList> mainList = null;
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        ImageView img;
-        TextView status;
+        CircleImageView img;
+        TextView Username;
+       LinearLayout live_status_linear;
+
         public MyViewHolder(View view) {
             super(view);
             img = view.findViewById(R.id.img);
-            status = view.findViewById(R.id.status);
+            Username = view.findViewById(R.id.Username);
+            live_status_linear = view.findViewById(R.id.live_status_linear);
             this.setIsRecyclable(false);
         }
     }
@@ -43,7 +48,7 @@ public class NewListAdapter extends RecyclerView.Adapter<NewListAdapter.MyViewHo
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.video_list_adapter, parent, false);
 
         myholder = new MyViewHolder(view);
 
@@ -54,7 +59,17 @@ public class NewListAdapter extends RecyclerView.Adapter<NewListAdapter.MyViewHo
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
 
         final BroadcastList mainobj = mainList.get(position);
-        holder.status.setText(mainobj.getType());
+
+        holder.Username.setText(mainobj.getAuthor());
+
+        String status = mainobj.getType();
+
+        if(status.equalsIgnoreCase("archived")){
+
+            holder.live_status_linear.setVisibility(View.GONE);
+        }else{
+            holder.live_status_linear.setVisibility(View.VISIBLE);
+        }
 
         String userimag = mainobj.getPreview();
 

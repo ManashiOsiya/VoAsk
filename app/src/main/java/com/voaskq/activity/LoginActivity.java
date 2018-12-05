@@ -179,8 +179,10 @@ public class LoginActivity extends AppCompatActivity {
                         JSONObject jsonObject1 = jsonObject.getJSONObject("result");
 
                         String user_id = jsonObject1.getString("user_id");
+                        String Firstname = jsonObject1.getString("first_name");
+                        String Lastname = jsonObject1.getString("last_name");
 
-                        editor.putString("Username", Username);
+                        editor.putString("User_fl_name", Firstname+" "+Lastname);
                         editor.putString("Userid", user_id);
                         editor.commit();
 

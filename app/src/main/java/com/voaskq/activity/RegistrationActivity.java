@@ -272,7 +272,7 @@ public class RegistrationActivity extends AppCompatActivity {
                      //   editor.putString("last_name", last_name);
                      //   editor.putString("picture", picture);
 
-                        editor.putString("Username", Username);
+                        editor.putString("User_fl_name", first_name+" "+last_name);
                         editor.putString("Userid", user_id);
                         editor.commit();
 

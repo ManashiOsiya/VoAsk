@@ -1,6 +1,7 @@
 package com.voaskq.activity;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
@@ -18,23 +19,29 @@ import com.bambuser.broadcaster.ConnectionError;
 import com.voaskq.R;
 import com.voaskq.helper.Constant;
 
-public class CameraActivity extends AppCompatActivity {
+public class CameraActivity  extends AppCompatActivity {
 
     SurfaceView mPreviewSurface;
     private static final String APPLICATION_ID = Constant.BAMBUSER_APPLICATIONID;
     Broadcaster mBroadcaster;
     Button mBroadcastButton;
 
+    SharedPreferences pref;
+    SharedPreferences.Editor editor;
+    String Userid,User_fl_name;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
+        getSharedPref();
+
         mPreviewSurface =  findViewById(R.id.PreviewSurfaceView);
         mBroadcaster = new Broadcaster(this, APPLICATION_ID, mBroadcasterObserver);
 
-        mBroadcaster.setTitle("Live Streaming");
-        mBroadcaster.setAuthor(getResources().getString(R.string.app_name));
+        mBroadcaster.setTitle(getResources().getString(R.string.app_name));
+        mBroadcaster.setAuthor(User_fl_name);
         mBroadcaster.setSendPosition(true);
       //  mBroadcaster.setCustomData("any custom metadata you want to attach and parse later");
 
@@ -49,6 +56,14 @@ public class CameraActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    private void getSharedPref() {
+
+        pref         = getSharedPreferences("MyPref", MODE_PRIVATE);
+        editor       = pref.edit();
+        Userid       = pref.getString("Userid", null);
+        User_fl_name = pref.getString("User_fl_name", "");
     }
 
     @Override
@@ -76,7 +91,7 @@ public class CameraActivity extends AppCompatActivity {
 
         @Override
         public void onConnectionStatusChange(BroadcastStatus broadcastStatus) {
-            mBroadcastButton.setText(broadcastStatus == BroadcastStatus.IDLE ? "Start Broadcast" : "Stop Broadcast");
+            mBroadcastButton.setText(broadcastStatus == BroadcastStatus.IDLE ? "Go Live" : "Stop Live");
 
             if (broadcastStatus == BroadcastStatus.STARTING)
                 getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);

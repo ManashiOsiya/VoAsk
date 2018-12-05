@@ -52,7 +52,7 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
         CircleImageView user_image;
         TextView Username,  questitle,ans_no;
         ImageView main_img,deleteask;
-        LinearLayout mainLinearimg;
+        LinearLayout mainLinearimg,clickLinear;
 
         public MyViewHolder(View view) {
             super(view);
@@ -64,7 +64,8 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
             main_img = view.findViewById(R.id.main_img);
             ans_no  = view.findViewById(R.id.ans_no);
             deleteask  = view.findViewById(R.id.deleteask);
-            this.setIsRecyclable(false);
+            clickLinear  = view.findViewById(R.id.clickLinear);
+        //    this.setIsRecyclable(false);
 
            if (Constant.ASK_CURRENT_PAGE_SELECTED.equalsIgnoreCase(Constant.ASK_PROFILE_PAGE_SELECTED)) {
                deleteask.setVisibility(View.VISIBLE);
@@ -76,7 +77,7 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
     public MainAskAdapter(ArrayList<MainAsk> mainList, Context context) {
         this.mainList = mainList;
         this.context = context;
-        setHasStableIds(true);
+      //  setHasStableIds(true);
     }
 
     @Override
@@ -139,7 +140,7 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
                     .error(R.drawable.app_icon)
                     .into(holder.main_img);
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.clickLinear .setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
