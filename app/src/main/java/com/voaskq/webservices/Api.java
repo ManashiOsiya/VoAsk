@@ -228,5 +228,28 @@ public interface Api {
     Call<ResponseBody> showVoteList(@Header("token") String token,
                                     @Query("post_image_id") String post_image_id);
 
+    /* 23 =====================================  @ add new comment  ====================================================*/
+
+//    https://apps.konnectapp.co.nz/voask/index.php/api/post/comment
+
+
+//    parameters-
+//    comment, post_id
+//    method post
+
+    @POST("post/comment")
+    @FormUrlEncoded
+    Call<ResponseBody> addNewComment(@Header("token") String token,
+                                    @Field("comment") String comment,
+                                    @Field("post_id") String post_id);
+
+    /* 24 =====================================  @ get comment list  ====================================================*/
+
+//    https://apps.konnectapp.co.nz/voask/index.php/api/post/commentList?post_id= (edited)
+
+    @GET("post/commentList")
+    Call<ResponseBody> getCommentList(@Header("token") String token,
+                                    @Query("post_id") String post_id);
+
 
 }

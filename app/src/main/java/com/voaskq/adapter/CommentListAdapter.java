@@ -3,33 +3,33 @@ package com.voaskq.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-
 import com.squareup.picasso.Picasso;
 import com.voaskq.R;
-import com.voaskq.modal.VoteList;
+import com.voaskq.modal.CommentList;
 
 import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> {
+public class CommentListAdapter extends RecyclerView.Adapter<CommentListAdapter.MyViewHolder> {
 
     public Context context;
-    ListAdapter.MyViewHolder myholder;
-    private ArrayList<VoteList> contactslist = null;
+    CommentListAdapter.MyViewHolder myholder;
+    private ArrayList<CommentList> contactslist = null;
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     String Userid;
 
-    public static ListAdapter.OnItemClickListener onItemClickListener;
+    public static CommentListAdapter.OnItemClickListener onItemClickListener;
 
-    public static void setListner(ListAdapter.OnItemClickListener listner) {
+    public static void setListner(CommentListAdapter.OnItemClickListener listner) {
         onItemClickListener = listner;
     }
 
@@ -39,7 +39,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> 
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        public TextView fname;
+        TextView fname,mcommenttext;
         LinearLayout linear;
         CircleImageView user_image;
 
@@ -48,6 +48,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> 
             fname   = view.findViewById(R.id. name );
             linear   = view.findViewById(R.id. linear );
             user_image = view.findViewById(R.id. user_image );
+            mcommenttext = view.findViewById(R.id.mcommenttext );
             linear.setOnClickListener(this);
         }
 
@@ -59,25 +60,27 @@ public class ListAdapter extends RecyclerView.Adapter<ListAdapter.MyViewHolder> 
         }
     }
 
-    public ListAdapter(ArrayList<VoteList> contactslist, Context context) {
+    public CommentListAdapter(ArrayList<CommentList> contactslist, Context context) {
         this.contactslist = contactslist;
         this.context = context;
     }
 
     @Override
-    public ListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item, parent, false);
+    public CommentListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.comment_list_item, parent, false);
 
-        myholder = new ListAdapter.MyViewHolder(view);
+        myholder = new CommentListAdapter.MyViewHolder(view);
         return myholder;
     }
 
     @Override
-    public void onBindViewHolder(final ListAdapter.MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final CommentListAdapter.MyViewHolder holder, final int position) {
 
-        VoteList votelist = contactslist.get(position);
+        CommentList votelist = contactslist.get(position);
 
         holder.fname.setText(votelist.getFirst_name()+" "+votelist.getLast_name());
+
+        holder.mcommenttext.setText(votelist.getComment()+"");
 
         final String userimag = context.getResources().getString(R.string.home_userimg_baseurl) + votelist.getPicture();
 

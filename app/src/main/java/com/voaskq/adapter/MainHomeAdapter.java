@@ -2,7 +2,6 @@ package com.voaskq.adapter;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -13,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -24,6 +22,7 @@ import com.squareup.picasso.Picasso;
 import com.voaskq.R;
 import com.voaskq.helper.Constant;
 import com.voaskq.helper.MyProgressbar;
+import com.voaskq.modal.CommentList;
 import com.voaskq.modal.MainHome;
 import com.voaskq.modal.SubHome;
 import com.voaskq.webservices.Api;
@@ -50,6 +49,8 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
     String tag = "haomeadapter";
     ArrayList<SubHome> subList = null;
 
+    ArrayList<CommentList> comment_List = null;
+
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     String Userid;
@@ -69,10 +70,11 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        CircleImageView user_image;
-        TextView Username, report, questitle;
-        ImageView previous, next, deletevote;
+        CircleImageView user_image ,user_image_comm;
+        TextView Username, report, questitle,allcomment;
+        ImageView  deletevote,submitComment;
         RecyclerView home_adapter_recyclerView;
+        EditText newComment;
 
         public MyViewHolder(View view) {
             super(view);
@@ -81,10 +83,12 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
             Username = view.findViewById(R.id.Username);
             report = view.findViewById(R.id.report);
             questitle = view.findViewById(R.id.questitle);
-            previous = view.findViewById(R.id.previous);
-            next = view.findViewById(R.id.next);
-            deletevote = view.findViewById(R.id.deletevote);
 
+            deletevote = view.findViewById(R.id.deletevote);
+            allcomment = view.findViewById(R.id.allcomment);
+            user_image_comm = view.findViewById(R.id.user_image_comm);
+            newComment = view.findViewById(R.id.newComment);
+            submitComment  = view.findViewById(R.id.submitComment);
             deletevote.setOnClickListener(this);
 
             home_adapter_recyclerView = view.findViewById(R.id.home_adapter_recyclerView);
@@ -104,8 +108,6 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
                 onItemClickListener.onItemClick(view, getPosition());
             }
         }
-
-
     }
 
     public MainHomeAdapter(ArrayList<MainHome> mainList, Context context) {
@@ -137,20 +139,17 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
         holder.questitle.setText(mainobj.getTitle());
         String userimag = context.getResources().getString(R.string.home_userimg_baseurl) + mainobj.getPicture();     //        https://apps.konnectapp.co.nz/voask/assets/profile/2018-11-05-02-33-04_5894_profile_image.jpg
 
-        if (userimag.equals("")) {
-
-            Picasso.with(context)
-                    .load(R.drawable.app_icon)
-                    .error(R.drawable.app_icon)
-                    .into(holder.user_image);
-
-        } else {
-            Picasso.with(context)
+        Picasso.with(context)
                     .load(userimag)
                     .placeholder(R.drawable.app_icon)
                     .error(R.drawable.app_icon)
                     .into(holder.user_image);
-        }
+
+        Picasso.with(context)
+                .load(userimag)
+                .placeholder(R.drawable.app_icon)
+                .error(R.drawable.app_icon)
+                .into(holder.user_image_comm);
 
         try {
             JSONArray images_arr = mainobj.getImages_arr();
@@ -195,12 +194,10 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
                 RelativeLayout spamtype_relative;
                 final TextView spamtype, submit;
 
-
                 cancle = dialog.findViewById(R.id.cancle);
                 spamtype_relative = dialog.findViewById(R.id.spamtype_relative);
                 spamtype = dialog.findViewById(R.id.spamtype);
                 submit = dialog.findViewById(R.id.submit);
-
 
                 cancle.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -212,7 +209,6 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
                 spamtype_relative.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-
 
                         final Dialog dialog_spam = new Dialog(context);
                         dialog_spam.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -262,8 +258,172 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
                 dialog.show();
             }
         });
+
+
+        holder.submitComment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String mytext = holder.newComment.getText().toString();
+
+                if(!mytext.equalsIgnoreCase("") || mytext.equalsIgnoreCase(null)  ){
+
+                    addNewComment(holder,mytext,mainobj.getPost_id());
+                }else{
+                    Toast.makeText(context, "Please enter valid comment", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+
+        holder.allcomment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                getCommentList(mainobj.getPost_id());
+            }
+        });
+
     }
 
+    private void getCommentList(String post_id) {
+
+
+        comment_List = new ArrayList<>();
+
+        final Dialog progress_spinner = MyProgressbar.LoadingSpinner(context);
+        progress_spinner.show();
+
+        Api api = ApiFactory.getClient().create(Api.class);
+        Call<ResponseBody> call = api.getCommentList(Userid,post_id);
+
+        Log.e(tag, "new url : " + call.request().url());
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                String output = null;
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line = null;
+
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line + "\n");
+                    }
+                    output = stringBuilder.toString();
+                    Log.e(tag, "onResponse: " + output);
+                    JSONObject jsonObject = new JSONObject(output);
+                    progress_spinner.dismiss();
+
+                    Log.e(tag,"response>>>>>>>>>"+output);
+
+                    if (jsonObject.getString("status").equalsIgnoreCase("SUCCESS")) {
+
+
+                        JSONArray result = jsonObject.getJSONArray("result");
+
+                        for(int i=0;i<result.length();i++){
+
+                            JSONObject jobj = result.getJSONObject(i);
+
+
+                            String id              = jobj.getString("id");
+                            String post_id         = jobj.getString("post_id");
+                            String comment         = jobj.getString("comment");
+                            String user_id         = jobj.getString("user_id");
+                            String date_time       = jobj.getString("date_time");
+                            String user_name       = jobj.getString("user_name");
+                            String first_name      = jobj.getString("first_name");
+                            String last_name       = jobj.getString("last_name");
+                            String mobile_number   = jobj.getString("mobile_number");
+                            String email_address   = jobj.getString("email_address");
+                            String gender          = jobj.getString("gender");
+                            String create_date     = jobj.getString("create_date");
+                            String create_by       = jobj.getString("create_by");
+                            String update_date     = jobj.getString("update_date");
+                            String update_by       = jobj.getString("update_by");
+                            String is_active       = jobj.getString("is_active");
+                            String password        = jobj.getString("password");
+                            String address         = jobj.getString("address");
+                            String zipcode         = jobj.getString("zipcode");
+                            String city            = jobj.getString("city");
+                            String is_approved     = jobj.getString("is_approved");
+                            String picture         = jobj.getString("picture");
+                            String about           = jobj.getString("about");
+                            String block_status    = jobj.getString("block_status");
+
+                            CommentList commlist = new CommentList(id, post_id, comment, user_id, date_time, user_name, first_name, last_name, mobile_number, email_address, gender, create_date, create_by, update_date, update_by, is_active, password, address, zipcode, city, is_approved, picture, about, block_status);
+                            comment_List.add(commlist);
+
+                        }
+
+                        showCommetList(comment_List);
+
+                    } else if (jsonObject.getString("status").equalsIgnoreCase("FAILED")) {
+                        String msg = jsonObject.getString("message");
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    progress_spinner.dismiss();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progress_spinner.dismiss();
+            }
+        });
+
+
+
+    }
+
+
+    void showCommetList(ArrayList<CommentList> commentlist){
+
+        final Dialog alphadialog = new Dialog(context);
+        alphadialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        alphadialog.setCancelable(true);
+        alphadialog.setCanceledOnTouchOutside(true);
+        alphadialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        alphadialog.setContentView(R.layout.listview_popup);
+
+        // WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        // lp.copyFrom(alphadialog.getWindow().getAttributes());
+        // lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+        // lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        // alphadialog.show();
+        // alphadialog.getWindow().setAttributes(lp);
+
+        RecyclerView   recyclerView = (RecyclerView) alphadialog.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
+        recyclerView.setLayoutManager(layoutManager);
+
+        CommentListAdapter mylistAdapter = new CommentListAdapter(commentlist, context);
+        recyclerView.setAdapter(mylistAdapter);
+        mylistAdapter.notifyDataSetChanged();
+
+
+        mylistAdapter.setListner(new CommentListAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View v, int Pos) {
+                switch (v.getId()) {
+                    case R.id.linear:
+
+
+                 //       alphadialog.dismiss();
+                        break;
+                }
+            }
+        });
+
+        alphadialog.show();
+    }
 
 
     private void reportSpam(String postid, final String spamtype, final Dialog dialog) {
@@ -315,6 +475,61 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
             }
         });
     }
+
+    private void addNewComment(final MyViewHolder holder, String mytext, String post_id) {
+
+        final Dialog progress_spinner = MyProgressbar.LoadingSpinner(context);
+        progress_spinner.show();
+
+        Api api = ApiFactory.getClient().create(Api.class);
+        Call<ResponseBody> call = api.addNewComment(Userid,mytext,post_id);
+
+        Log.e(tag, "new url : " + call.request().url());
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                String output = null;
+                try {
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(response.body().byteStream()));
+                    StringBuilder stringBuilder = new StringBuilder();
+                    String line = null;
+
+                    while ((line = reader.readLine()) != null) {
+                        stringBuilder.append(line + "\n");
+                    }
+                    output = stringBuilder.toString();
+                    Log.e(tag, "onResponse: " + output);
+                    JSONObject jsonObject = new JSONObject(output);
+                    progress_spinner.dismiss();
+                    if (jsonObject.getString("status").equalsIgnoreCase("SUCCESS")) {
+
+
+                        holder.newComment.setText("");
+
+
+                    } else if (jsonObject.getString("status").equalsIgnoreCase("FAILED")) {
+                        String msg = jsonObject.getString("message");
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                    }
+                } catch (Exception e) {
+                    progress_spinner.dismiss();
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progress_spinner.dismiss();
+            }
+        });
+
+
+    }
+
+
+
 
     @Override
     public int getItemCount() {

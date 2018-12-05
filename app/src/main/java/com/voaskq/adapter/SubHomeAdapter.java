@@ -1,18 +1,15 @@
 package com.voaskq.adapter;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,8 +22,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 import com.voaskq.R;
-import com.voaskq.activity.LoginActivity;
-import com.voaskq.activity.MainActivity;
 import com.voaskq.helper.MyProgressbar;
 import com.voaskq.modal.SubHome;
 import com.voaskq.modal.VoteList;
@@ -404,19 +399,19 @@ public class SubHomeAdapter extends RecyclerView.Adapter<SubHomeAdapter.MyViewHo
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
 
-        ListAdapter mylistAdapter = new ListAdapter(votelist, context);
+        VoteListAdapter mylistAdapter = new VoteListAdapter(votelist, context);
         recyclerView.setAdapter(mylistAdapter);
         mylistAdapter.notifyDataSetChanged();
 
 
-        mylistAdapter.setListner(new ListAdapter.OnItemClickListener() {
+        mylistAdapter.setListner(new VoteListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int Pos) {
                 switch (v.getId()) {
                     case R.id.linear:
 
 
-                        alphadialog.dismiss();
+                      //  alphadialog.dismiss();
                         break;
                 }
             }
