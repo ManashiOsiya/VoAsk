@@ -21,6 +21,7 @@ import com.voaskq.activity.LoginActivity;
 import com.voaskq.activity.MainActivity;
 import com.voaskq.activity.RegistrationActivity;
 import com.voaskq.adapter.MainHomeAdapter;
+import com.voaskq.helper.Constant;
 import com.voaskq.helper.MyProgressbar;
 import com.voaskq.modal.MainHome;
 import com.voaskq.webservices.Api;
@@ -97,8 +98,9 @@ public class HomeFragment extends Fragment {
 
     private void getDataList() {
 
-        mainlist = new ArrayList<>();
+        Constant.VOTE_CURRENT_PAGE_SELECTED = Constant.HOME_PAGE_SELECTED ;
 
+        mainlist = new ArrayList<>();
         final Dialog progress_spinner = MyProgressbar.LoadingSpinner(mContext);
         progress_spinner.show();
 
@@ -130,33 +132,33 @@ public class HomeFragment extends Fragment {
 
                             JSONObject jsonobj = result_jsonArray.getJSONObject(i);
 
-                            String     post_id             = jsonobj.getString("post_id");
-                            String     title               = jsonobj.getString("title");
-                            String     create_date         = jsonobj.getString("create_date");
-                            String     user_id             = jsonobj.getString("user_id");
-                            String     post_type           = jsonobj.getString("post_type");
-                            String     category            = jsonobj.getString("category");
-                            String     spam_report_count   = jsonobj.getString("spam_report_count");
-                            String     votes               = jsonobj.getString("votes");
-                            String     user_name           = jsonobj.getString("user_name");
-                            String     first_name          = jsonobj.getString("first_name");
-                            String     last_name           = jsonobj.getString("last_name");
-                            String     mobile_number       = jsonobj.getString("mobile_number");
-                            String     email_address       = jsonobj.getString("email_address");
-                            String     gender              = jsonobj.getString("gender");
-                            String     create_by           = jsonobj.getString("create_by");
-                            String     update_date         = jsonobj.getString("update_date");
-                            String     update_by           = jsonobj.getString("update_by");
-                            String     is_active           = jsonobj.getString("is_active");
-                            String     password            = jsonobj.getString("password");
-                            String     address             = jsonobj.getString("address");
-                            String     zipcode             = jsonobj.getString("zipcode");
-                            String     city                = jsonobj.getString("city");
-                            String     is_approved         = jsonobj.getString("is_approved");
-                            String     picture             = jsonobj.getString("picture");
-                            String     about               = jsonobj.getString("about");
-                            String     block_status        = jsonobj.getString("block_status");
-                            JSONArray  images_arr         =  jsonobj.getJSONArray("images");
+                            String  post_id           = jsonobj.getString("post_id");
+                            String  title             = jsonobj.getString("title");
+                            String  create_date       = jsonobj.getString("create_date");
+                            String  user_id           = jsonobj.getString("user_id");
+                            String  post_type         = jsonobj.getString("post_type");
+                            String  category          = jsonobj.getString("category");
+                            String  spam_report_count = jsonobj.getString("spam_report_count");
+                            String  votes             = jsonobj.getString("votes");
+                            String  user_name         = jsonobj.getString("user_name");
+                            String  first_name        = jsonobj.getString("first_name");
+                            String  last_name         = jsonobj.getString("last_name");
+                            String  mobile_number     = jsonobj.getString("mobile_number");
+                            String  email_address     = jsonobj.getString("email_address");
+                            String  gender            = jsonobj.getString("gender");
+                            String  create_by         = jsonobj.getString("create_by");
+                            String  update_date       = jsonobj.getString("update_date");
+                            String  update_by         = jsonobj.getString("update_by");
+                            String  is_active         = jsonobj.getString("is_active");
+                            String  password          = jsonobj.getString("password");
+                            String  address           = jsonobj.getString("address");
+                            String  zipcode           = jsonobj.getString("zipcode");
+                            String  city              = jsonobj.getString("city");
+                            String  is_approved       = jsonobj.getString("is_approved");
+                            String  picture           = jsonobj.getString("picture");
+                            String  about             = jsonobj.getString("about");
+                            String  block_status      = jsonobj.getString("block_status");
+                            JSONArray  images_arr     =  jsonobj.getJSONArray("images");
 
                             MainHome obj = new MainHome(post_id, title, create_date, user_id, post_type, category, spam_report_count, votes, user_name, first_name, last_name, mobile_number, email_address, gender, create_by, update_date, update_by, is_active, password, address, zipcode, city, is_approved, picture, about, block_status, images_arr );
                             mainlist.add(obj);

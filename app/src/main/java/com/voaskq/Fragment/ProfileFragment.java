@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -13,9 +14,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.webkit.MimeTypeMap;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -27,6 +30,7 @@ import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 import com.voaskq.R;
 import com.voaskq.activity.LoginActivity;
+import com.voaskq.activity.MainActivity;
 import com.voaskq.adapter.MainAskAdapter;
 import com.voaskq.adapter.MainHomeAdapter;
 import com.voaskq.helper.Constant;
@@ -81,8 +85,6 @@ public class ProfileFragment extends Fragment {
     RecyclerView ask_recyclerView;
     ArrayList<MainAsk> ask_list;
 
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -92,13 +94,18 @@ public class ProfileFragment extends Fragment {
         initviews();
         setSharedPref();
         clickEvents();
-        getProfileData();
+
 
         return view;
     }
 
     @Override
     public void onResume() {
+
+        getProfileData();
+        getVoteData();
+        getAskList();
+
         super.onResume();
     }
 
@@ -519,13 +526,52 @@ public class ProfileFragment extends Fragment {
                 switch (v.getId()) {
                     case R.id.deletevote:
 
-                        deleteVote(vote_list.get(Pos).getPost_id(),Pos,main_adapter);
+
+
+                        showDeletePopup(vote_list.get(Pos).getPost_id(),Pos,main_adapter);
+
+
                         break;
-
-
                 }
             }
         });
+    }
+
+    private void showDeletePopup(final String post_id, final int pos, final MainHomeAdapter main_adapter) {
+
+        final Dialog dialog = new Dialog(mContext);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.message);
+
+        final TextView tvmsg = (TextView) dialog.findViewById(R.id.msg);
+        TextView done = dialog.findViewById(R.id.btn_done);
+        TextView cancel = dialog.findViewById(R.id.btn_cancel);
+
+        done.setText("Yes");
+        cancel.setText("No");
+
+        tvmsg.setText("Do You Want Delete Post");
+        tvmsg.setGravity(Gravity.CENTER);
+
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                deleteVote(post_id,pos,main_adapter);
+                dialog.dismiss();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     private void deleteVote(String post_id, final int position, final MainHomeAdapter main_adapter) {

@@ -322,13 +322,10 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
 
                     if (jsonObject.getString("status").equalsIgnoreCase("SUCCESS")) {
 
-
                         JSONArray result = jsonObject.getJSONArray("result");
-
                         for(int i=0;i<result.length();i++){
 
                             JSONObject jobj = result.getJSONObject(i);
-
 
                             String id              = jobj.getString("id");
                             String post_id         = jobj.getString("post_id");
@@ -357,9 +354,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
 
                             CommentList commlist = new CommentList(id, post_id, comment, user_id, date_time, user_name, first_name, last_name, mobile_number, email_address, gender, create_date, create_by, update_date, update_by, is_active, password, address, zipcode, city, is_approved, picture, about, block_status);
                             comment_List.add(commlist);
-
                         }
-
                         showCommetList(comment_List);
 
                     } else if (jsonObject.getString("status").equalsIgnoreCase("FAILED")) {
@@ -377,11 +372,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
                 progress_spinner.dismiss();
             }
         });
-
-
-
     }
-
 
     void showCommetList(ArrayList<CommentList> commentlist){
 

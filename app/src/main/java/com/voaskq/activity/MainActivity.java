@@ -28,7 +28,6 @@ import com.voaskq.Fragment.VoteFragment;
 import com.voaskq.R;
 import com.voaskq.helper.Constant;
 
-import static com.voaskq.helper.Constant.HOME_PAGE_SELECTED;
 
 public class MainActivity extends AppCompatActivity {
 

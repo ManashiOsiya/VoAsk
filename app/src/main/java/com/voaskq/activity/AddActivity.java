@@ -148,7 +148,6 @@ public class AddActivity extends AppCompatActivity implements AdapterView.OnItem
 
         Description = description.getText().toString();
         uploadFile(file_arr);
-
     }
 
     private void setAdapter() {
@@ -158,11 +157,10 @@ public class AddActivity extends AppCompatActivity implements AdapterView.OnItem
 
         SpinnerCustomAdapter spinner_category_customAdapter=new SpinnerCustomAdapter(getApplicationContext(),spinner_category_item);
         spinner_category.setAdapter(spinner_category_customAdapter);
-
     }
 
     private void refershData() {
-        // description.setText("");
+
         file_arr = new ArrayList<>();
         adapter = new AddVoteNAskAdapter(file_arr, getApplicationContext());
         recyclerView.setAdapter(adapter);
@@ -174,23 +172,17 @@ public class AddActivity extends AppCompatActivity implements AdapterView.OnItem
                 switch (v.getId()) {
                     case R.id.delete:
 
-                        Log.e(tag, "Delete click"+Pos);
-
                         if(file_arr.size()>0){
 
                             file_arr.remove(Pos);
                             recyclerView.removeViewAt(Pos);
                             adapter.notifyItemRemoved(Pos);
                             adapter.notifyItemRangeChanged(Pos, file_arr.size());
-
                         }
-
                         break;
                 }
             }
         });
-
-
     }
 
 
@@ -270,6 +262,9 @@ public class AddActivity extends AppCompatActivity implements AdapterView.OnItem
                     if (jsonObject.getString("status").equalsIgnoreCase("SUCCESS")) {
                         finish();
                     } else if (jsonObject.getString("status").equalsIgnoreCase("FAILED")) {
+
+                        String msg = jsonObject.getString("message");
+                        Toast.makeText(AddActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

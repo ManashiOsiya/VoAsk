@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -161,12 +162,48 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
         holder.deleteask.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                deleteASk(mainobj.getQuestion_id(),position);
-
+                showDeletePopup(mainobj.getQuestion_id(),position);
             }
         });
 
+    }
+
+
+    private void showDeletePopup(final  String question_id,final int position) {
+
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.setContentView(R.layout.message);
+
+        final TextView tvmsg = (TextView) dialog.findViewById(R.id.msg);
+        TextView done = dialog.findViewById(R.id.btn_done);
+        TextView cancel = dialog.findViewById(R.id.btn_cancel);
+
+        done.setText("Yes");
+        cancel.setText("No");
+
+        tvmsg.setText("Do You Want Delete Post");
+        tvmsg.setGravity(Gravity.CENTER);
+
+        done.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                deleteASk(question_id,position);
+                dialog.dismiss();
+            }
+        });
+
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
     }
 
     private void deleteASk(String question_id, final int position) {
@@ -196,7 +233,6 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
                     if (jsonObject.getString("status").equalsIgnoreCase("SUCCESS")) {
 
                         mainList.remove(position);
-//                        removeViewAt(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, mainList.size());
 
@@ -215,12 +251,7 @@ public class MainAskAdapter extends RecyclerView.Adapter<MainAskAdapter.MyViewHo
                 progress_spinner.dismiss();
             }
         });
-
-
-
     }
-
-
 
     @Override
     public int getItemCount() {
