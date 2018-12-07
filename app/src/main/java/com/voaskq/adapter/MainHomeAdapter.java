@@ -116,6 +116,8 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
       //  setHasStableIds(true);
     }
 
+
+
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_main_adapteritem, parent, false);

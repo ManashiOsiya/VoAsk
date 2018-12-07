@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -172,6 +173,8 @@ public class SubHomeAdapter extends RecyclerView.Adapter<SubHomeAdapter.MyViewHo
         zoom_dialog.setCanceledOnTouchOutside(true);
         zoom_dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         zoom_dialog.setContentView(R.layout.zoom_dialog);
+
+//        zoom_dialog.getWindow().setGravity(Gravity.BOTTOM);
 
         ImageView zoomimg = zoom_dialog.findViewById(R.id.zoomimg);
         ImageView close = zoom_dialog.findViewById(R.id.close);
@@ -367,6 +370,7 @@ public class SubHomeAdapter extends RecyclerView.Adapter<SubHomeAdapter.MyViewHo
                     }
                 } catch (Exception e) {
                     progress_spinner.dismiss();
+                    Log.e("one","~~~~Exception at sub home adapter in vote list~~~~~~~~~~"+e);
                     e.printStackTrace();
                 }
             }
@@ -386,6 +390,8 @@ public class SubHomeAdapter extends RecyclerView.Adapter<SubHomeAdapter.MyViewHo
         alphadialog.setCanceledOnTouchOutside(true);
         alphadialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alphadialog.setContentView(R.layout.listview_popup);
+
+        alphadialog.getWindow().setGravity(Gravity.BOTTOM);
 
       // WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
       // lp.copyFrom(alphadialog.getWindow().getAttributes());

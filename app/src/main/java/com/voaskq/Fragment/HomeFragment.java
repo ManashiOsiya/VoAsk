@@ -74,6 +74,16 @@ public class HomeFragment extends Fragment {
         return  mview;
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
     private void getSharedPrefdata() {
 
         pref = mContext.getSharedPreferences("MyPref", MODE_PRIVATE);
@@ -158,7 +168,7 @@ public class HomeFragment extends Fragment {
                             String  picture           = jsonobj.getString("picture");
                             String  about             = jsonobj.getString("about");
                             String  block_status      = jsonobj.getString("block_status");
-                            JSONArray  images_arr     =  jsonobj.getJSONArray("images");
+                            JSONArray  images_arr     = jsonobj.getJSONArray("images");
 
                             MainHome obj = new MainHome(post_id, title, create_date, user_id, post_type, category, spam_report_count, votes, user_name, first_name, last_name, mobile_number, email_address, gender, create_by, update_date, update_by, is_active, password, address, zipcode, city, is_approved, picture, about, block_status, images_arr );
                             mainlist.add(obj);

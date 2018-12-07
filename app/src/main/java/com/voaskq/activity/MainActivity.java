@@ -46,9 +46,12 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment = new HomeFragment();
             changeFragment(fragment);
         }
-
         clickEvents();
+    }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     private void clickEvents() {
@@ -59,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
 
               Intent in = new Intent(MainActivity.this,AddActivity.class);
               startActivity(in);
-
             }
         });
 
@@ -69,11 +71,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent in = new Intent(MainActivity.this,SearchActivity.class);
                 startActivity(in);
-
             }
         });
-
-
     }
 
     private void initviews() {
@@ -93,9 +92,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.content_frame, fragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
-
     }
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -134,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                     Fragment fragment3 = new NewVideoFragment();
                     changeFragment(fragment3);
                     return true;
-
 
             }
             return false;
