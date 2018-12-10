@@ -339,26 +339,26 @@ public class SubHomeAdapter extends RecyclerView.Adapter<SubHomeAdapter.MyViewHo
                         for (int i = 0; i < jresult.length(); i++) {
                             JSONObject obj = jresult.getJSONObject(i);
 
-                            String user_id           = obj.getString("user_id");
-                            String user_name            = obj.getString("user_name");
-                            String first_name           = obj.getString("first_name");
-                            String last_name            = obj.getString("last_name");
-                            String mobile_number            = obj.getString("mobile_number");
-                            String email_address            = obj.getString("email_address");
-                            String gender               = obj.getString("gender");
-                            String create_date          = obj.getString("create_date");
-                            String create_by            = obj.getString("create_by");
-                            String update_date                  = obj.getString("update_date");
-                            String update_by                        = obj.getString("update_by");
-                            String is_active                        = obj.getString("is_active");
-                            String password                         = obj.getString("password");
-                            String address                          = obj.getString("address");
-                            String zipcode                          = obj.getString("zipcode");
-                            String city                     = obj.getString("city");
-                            String is_approved                      = obj.getString("is_approved");
-                            String picture                  = obj.getString("picture");
-                            String about                    = obj.getString("about");
-                            String block_status     = obj.getString("block_status");
+                            String user_id = obj.getString("user_id");
+                            String user_name = obj.getString("user_name");
+                            String first_name = obj.getString("first_name");
+                            String last_name = obj.getString("last_name");
+                            String mobile_number = obj.getString("mobile_number");
+                            String email_address = obj.getString("email_address");
+                            String gender = obj.getString("gender");
+                            String create_date = obj.getString("create_date");
+                            String create_by = obj.getString("create_by");
+                            String update_date = obj.getString("update_date");
+                            String update_by = obj.getString("update_by");
+                            String is_active = obj.getString("is_active");
+                            String password = obj.getString("password");
+                            String address = obj.getString("address");
+                            String zipcode = obj.getString("zipcode");
+                            String city = obj.getString("city");
+                            String is_approved = obj.getString("is_approved");
+                            String picture = obj.getString("picture");
+                            String about = obj.getString("about");
+                            String block_status = obj.getString("block_status");
 
                             VoteList mvotelist = new VoteList(user_id, user_name, first_name, last_name, mobile_number, email_address, gender, create_date, create_by, update_date, update_by, is_active, password, address, zipcode, city, is_approved, picture, about, block_status);
                             votelist.add(mvotelist);
@@ -370,10 +370,11 @@ public class SubHomeAdapter extends RecyclerView.Adapter<SubHomeAdapter.MyViewHo
                     }
                 } catch (Exception e) {
                     progress_spinner.dismiss();
-                    Log.e("one","~~~~Exception at sub home adapter in vote list~~~~~~~~~~"+e);
+                    Log.e("one", "~~~~Exception at sub home adapter in vote list~~~~~~~~~~" + e);
                     e.printStackTrace();
                 }
             }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 progress_spinner.dismiss();
@@ -382,7 +383,7 @@ public class SubHomeAdapter extends RecyclerView.Adapter<SubHomeAdapter.MyViewHo
     }
 
 
-    void showVoteList(ArrayList<VoteList> votelist){
+    void showVoteList(ArrayList<VoteList> votelist) {
 
         final Dialog alphadialog = new Dialog(context);
         alphadialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -391,16 +392,17 @@ public class SubHomeAdapter extends RecyclerView.Adapter<SubHomeAdapter.MyViewHo
         alphadialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alphadialog.setContentView(R.layout.listview_popup);
 
+
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(alphadialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+    //  lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        alphadialog.show();
+        alphadialog.getWindow().setAttributes(lp);
+
         alphadialog.getWindow().setGravity(Gravity.BOTTOM);
 
-      // WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-      // lp.copyFrom(alphadialog.getWindow().getAttributes());
-      // lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-      // lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-      // alphadialog.show();
-      // alphadialog.getWindow().setAttributes(lp);
-
-        RecyclerView   recyclerView = (RecyclerView) alphadialog.findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = (RecyclerView) alphadialog.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
@@ -417,7 +419,7 @@ public class SubHomeAdapter extends RecyclerView.Adapter<SubHomeAdapter.MyViewHo
                     case R.id.linear:
 
 
-                      //  alphadialog.dismiss();
+                        //  alphadialog.dismiss();
                         break;
                 }
             }

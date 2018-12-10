@@ -8,10 +8,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -48,31 +50,26 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
     ArrayList<MainHome> mainList = null;
     String tag = "haomeadapter";
     ArrayList<SubHome> subList = null;
-
     ArrayList<CommentList> comment_List = null;
-
     SharedPreferences pref;
     SharedPreferences.Editor editor;
     String Userid;
 
-
     public static OnItemClickListener onItemClickListener;
+
     public static void setListner(OnItemClickListener listner) {
         onItemClickListener = listner;
     }
 
     public interface OnItemClickListener {
         public void onItemClick(View v, int Pos);
-
-
     }
-
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-        CircleImageView user_image ,user_image_comm;
-        TextView Username, report, questitle,allcomment;
-        ImageView  deletevote,submitComment;
+        CircleImageView user_image, user_image_comm;
+        TextView Username, report, questitle, allcomment;
+        ImageView deletevote, submitComment;
         RecyclerView home_adapter_recyclerView;
         EditText newComment;
 
@@ -88,7 +85,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
             allcomment = view.findViewById(R.id.allcomment);
             user_image_comm = view.findViewById(R.id.user_image_comm);
             newComment = view.findViewById(R.id.newComment);
-            submitComment  = view.findViewById(R.id.submitComment);
+            submitComment = view.findViewById(R.id.submitComment);
             deletevote.setOnClickListener(this);
 
             home_adapter_recyclerView = view.findViewById(R.id.home_adapter_recyclerView);
@@ -99,7 +96,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
                 report.setVisibility(View.GONE);
                 deletevote.setVisibility(View.VISIBLE);
             }
-        //    this.setIsRecyclable(false);
+            //    this.setIsRecyclable(false);
         }
 
         @Override
@@ -113,18 +110,17 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
     public MainHomeAdapter(ArrayList<MainHome> mainList, Context context) {
         this.mainList = mainList;
         this.context = context;
-      //  setHasStableIds(true);
+        //  setHasStableIds(true);
     }
-
 
 
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.home_main_adapteritem, parent, false);
 
-        pref    = context.getSharedPreferences("MyPref", context.MODE_PRIVATE);
-        editor  = pref.edit();
-        Userid  = pref.getString("Userid", null);
+        pref = context.getSharedPreferences("MyPref", context.MODE_PRIVATE);
+        editor = pref.edit();
+        Userid = pref.getString("Userid", null);
 
         myholder = new MyViewHolder(view);
         return myholder;
@@ -142,10 +138,10 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
         String userimag = context.getResources().getString(R.string.home_userimg_baseurl) + mainobj.getPicture();     //        https://apps.konnectapp.co.nz/voask/assets/profile/2018-11-05-02-33-04_5894_profile_image.jpg
 
         Picasso.with(context)
-                    .load(userimag)
-                    .placeholder(R.drawable.app_icon)
-                    .error(R.drawable.app_icon)
-                    .into(holder.user_image);
+                .load(userimag)
+                .placeholder(R.drawable.app_icon)
+                .error(R.drawable.app_icon)
+                .into(holder.user_image);
 
         Picasso.with(context)
                 .load(userimag)
@@ -253,7 +249,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
                 submit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        reportSpam(mainobj.getPost_id(), spamtype.getText().toString(),dialog);
+                        reportSpam(mainobj.getPost_id(), spamtype.getText().toString(), dialog);
                     }
                 });
 
@@ -268,10 +264,10 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
 
                 String mytext = holder.newComment.getText().toString();
 
-                if(!mytext.equalsIgnoreCase("") || mytext.equalsIgnoreCase(null)  ){
+                if (!mytext.equalsIgnoreCase("") || mytext.equalsIgnoreCase(null)) {
 
-                    addNewComment(holder,mytext,mainobj.getPost_id());
-                }else{
+                    addNewComment(holder, mytext, mainobj.getPost_id());
+                } else {
                     Toast.makeText(context, "Please enter valid comment", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -298,7 +294,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
         progress_spinner.show();
 
         Api api = ApiFactory.getClient().create(Api.class);
-        Call<ResponseBody> call = api.getCommentList(Userid,post_id);
+        Call<ResponseBody> call = api.getCommentList(Userid, post_id);
 
         Log.e(tag, "new url : " + call.request().url());
 
@@ -320,39 +316,39 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
                     JSONObject jsonObject = new JSONObject(output);
                     progress_spinner.dismiss();
 
-                    Log.e(tag,"response>>>>>>>>>"+output);
+                    Log.e(tag, "response>>>>>>>>>" + output);
 
                     if (jsonObject.getString("status").equalsIgnoreCase("SUCCESS")) {
 
                         JSONArray result = jsonObject.getJSONArray("result");
-                        for(int i=0;i<result.length();i++){
+                        for (int i = 0; i < result.length(); i++) {
 
                             JSONObject jobj = result.getJSONObject(i);
 
-                            String id              = jobj.getString("id");
-                            String post_id         = jobj.getString("post_id");
-                            String comment         = jobj.getString("comment");
-                            String user_id         = jobj.getString("user_id");
-                            String date_time       = jobj.getString("date_time");
-                            String user_name       = jobj.getString("user_name");
-                            String first_name      = jobj.getString("first_name");
-                            String last_name       = jobj.getString("last_name");
-                            String mobile_number   = jobj.getString("mobile_number");
-                            String email_address   = jobj.getString("email_address");
-                            String gender          = jobj.getString("gender");
-                            String create_date     = jobj.getString("create_date");
-                            String create_by       = jobj.getString("create_by");
-                            String update_date     = jobj.getString("update_date");
-                            String update_by       = jobj.getString("update_by");
-                            String is_active       = jobj.getString("is_active");
-                            String password        = jobj.getString("password");
-                            String address         = jobj.getString("address");
-                            String zipcode         = jobj.getString("zipcode");
-                            String city            = jobj.getString("city");
-                            String is_approved     = jobj.getString("is_approved");
-                            String picture         = jobj.getString("picture");
-                            String about           = jobj.getString("about");
-                            String block_status    = jobj.getString("block_status");
+                            String id = jobj.getString("id");
+                            String post_id = jobj.getString("post_id");
+                            String comment = jobj.getString("comment");
+                            String user_id = jobj.getString("user_id");
+                            String date_time = jobj.getString("date_time");
+                            String user_name = jobj.getString("user_name");
+                            String first_name = jobj.getString("first_name");
+                            String last_name = jobj.getString("last_name");
+                            String mobile_number = jobj.getString("mobile_number");
+                            String email_address = jobj.getString("email_address");
+                            String gender = jobj.getString("gender");
+                            String create_date = jobj.getString("create_date");
+                            String create_by = jobj.getString("create_by");
+                            String update_date = jobj.getString("update_date");
+                            String update_by = jobj.getString("update_by");
+                            String is_active = jobj.getString("is_active");
+                            String password = jobj.getString("password");
+                            String address = jobj.getString("address");
+                            String zipcode = jobj.getString("zipcode");
+                            String city = jobj.getString("city");
+                            String is_approved = jobj.getString("is_approved");
+                            String picture = jobj.getString("picture");
+                            String about = jobj.getString("about");
+                            String block_status = jobj.getString("block_status");
 
                             CommentList commlist = new CommentList(id, post_id, comment, user_id, date_time, user_name, first_name, last_name, mobile_number, email_address, gender, create_date, create_by, update_date, update_by, is_active, password, address, zipcode, city, is_approved, picture, about, block_status);
                             comment_List.add(commlist);
@@ -376,7 +372,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
         });
     }
 
-    void showCommetList(ArrayList<CommentList> commentlist){
+    void showCommetList(ArrayList<CommentList> commentlist) {
 
         final Dialog alphadialog = new Dialog(context);
         alphadialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -385,14 +381,17 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
         alphadialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         alphadialog.setContentView(R.layout.listview_popup);
 
-        // WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        // lp.copyFrom(alphadialog.getWindow().getAttributes());
-        // lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        // lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        // alphadialog.show();
-        // alphadialog.getWindow().setAttributes(lp);
+        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+        lp.copyFrom(alphadialog.getWindow().getAttributes());
+        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
 
-        RecyclerView   recyclerView = (RecyclerView) alphadialog.findViewById(R.id.recyclerView);
+        lp.height = (int) ((lp.width * 0.5f));
+//       lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+        alphadialog.getWindow().setAttributes(lp);
+
+        alphadialog.getWindow().setGravity(Gravity.BOTTOM);
+
+        RecyclerView recyclerView = (RecyclerView) alphadialog.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(context);
         recyclerView.setLayoutManager(layoutManager);
@@ -401,15 +400,12 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
         recyclerView.setAdapter(mylistAdapter);
         mylistAdapter.notifyDataSetChanged();
 
-
         mylistAdapter.setListner(new CommentListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View v, int Pos) {
                 switch (v.getId()) {
                     case R.id.linear:
-
-
-                 //       alphadialog.dismiss();
+                        //       alphadialog.dismiss();
                         break;
                 }
             }
@@ -425,7 +421,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
         progress_spinner.show();
 
         Api api = ApiFactory.getClient().create(Api.class);
-        Call<ResponseBody> call = api.reportSpam(Userid,postid,spamtype);
+        Call<ResponseBody> call = api.reportSpam(Userid, postid, spamtype);
 
         Log.e(tag, "new url : " + call.request().url());
 
@@ -475,7 +471,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
         progress_spinner.show();
 
         Api api = ApiFactory.getClient().create(Api.class);
-        Call<ResponseBody> call = api.addNewComment(Userid,mytext,post_id);
+        Call<ResponseBody> call = api.addNewComment(Userid, mytext, post_id);
 
         Log.e(tag, "new url : " + call.request().url());
 
@@ -520,8 +516,6 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
 
 
     }
-
-
 
 
     @Override
