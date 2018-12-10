@@ -362,6 +362,7 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
                 } catch (Exception e) {
                     progress_spinner.dismiss();
                     e.printStackTrace();
+                    Log.e(tag,"one exception"+e);
                 }
             }
 
@@ -384,9 +385,8 @@ public class MainHomeAdapter extends RecyclerView.Adapter<MainHomeAdapter.MyView
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(alphadialog.getWindow().getAttributes());
         lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-
-        lp.height = (int) ((lp.width * 0.5f));
-//       lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+//        lp.height = (int) ((lp.width * 0.5f));
+//        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
         alphadialog.getWindow().setAttributes(lp);
 
         alphadialog.getWindow().setGravity(Gravity.BOTTOM);
